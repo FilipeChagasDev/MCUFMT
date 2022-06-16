@@ -31,7 +31,13 @@ $(document).ready(function($){
 function setCourseTitle(title, campus, structbegin, structend)
 {
     let titleheading = document.getElementById("course-title");
-    titleheading.innerHTML = title + ", " + campus + ", estrutura " + structbegin + "-" + structend;
+
+    if(structend == "99999") structend = "Atualmente";
+
+    titleheading.innerHTML = 
+        "<b>Curso:</b> " + title + "</br>" 
+        + "<b>Campus:</b> " + campus + "</br>"
+        + "<b>Estrutura:</b> " + structbegin + " - " + structend;
 }
 
 function addSubjectToTable(subjectitem)
