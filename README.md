@@ -1,5 +1,5 @@
 # MCUFMT (Matrizes Curriculares da UFMT)
 
-Website não oficial para consulta de matrizes curriculares da UFMT
+Website não oficial para consulta de matrizes curriculares da UFMT.
 
-[https://filipechagasdev.github.io/UFMT-Matriz-Curricular/index.html](https://filipechagasdev.github.io/UFMT-Matriz-Curricular/index.html)
+[filipechagasdev.github.io/MCUFMT](https://filipechagasdev.github.io/MCUFMT/)
