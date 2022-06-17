@@ -1,4 +1,5 @@
 $(document).ready(function($){
+    
 
     requestCampusList(function(campuslist)
     {
@@ -14,11 +15,11 @@ $(document).ready(function($){
 
                         requestSubjectList(courseitem.Codigo, getSelectedStructureBegin(), getSelectedStructureEnd(), function(subjectlist)
                         {
-                            console.log(subjectlist);
                             subjectlist.ListaDisciplinas.forEach(function(subjectitem)
                             {
                                 console.log(subjectitem);
                                 addSubjectToTable(subjectitem);
+                                addSubjectModal(subjectitem);
                             });
                         });
                     }
@@ -59,9 +60,11 @@ function addSubjectToTable(subjectitem)
         row.style.backgroundColor = "rgb(240, 255, 240)";
 
     row.className = "clickable-table-row"
+    row.setAttribute("data-toggle", "modal");
+    row.setAttribute("data-target", "#exampleModal");
+
     row.onclick = function(){
-        //TODO
-        //window.document.location = "disciplinas.html?course="+_id+"&begin="+_structbegin+"&end="+_structend;
+        $("#modal"+subjectid).modal("show");
     };
     
     let idcell = row.insertCell(0);
@@ -80,6 +83,56 @@ function addSubjectToTable(subjectitem)
     typecell.innerHTML = subjecttype;
     thcell.innerHTML = teorichours;
     phcell.innerHTML = practhours;
+}
+
+function addSubjectModal(subjectitem)
+{
+    const subjectid = subjectitem.Codigo;
+    const subjecttype = subjectitem.Tipo;
+    const subjectname = subjectitem.Descricao;
+    const subjectsemester = subjectitem.Semestre;
+    const teorichours = subjectitem.CargaHorariaTeorico;
+    const practhours = subjectitem.CargaHorariaPratica;
+
+    let prerequisites = ""
+    if(subjectitem.ListaPrequisitos.length > 0)
+    {
+        prerequisites = "<b>Pré-requisitos:</b></br><ul>"
+        subjectitem.ListaPrequisitos.forEach(function(requisiteitem)
+        {
+            prerequisites += "<li>" + requisiteitem.Descricao + "</li>"
+        });
+        prerequisites += "</ul>" 
+    }
+
+    const modalhtml = `
+    <div class="modal fade" id="modal${subjectid}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        ${subjectname}
+                    </h5>
+                </div>
+                <div class="modal-body">
+                  <b>Tipo: </b> ${subjecttype} </br>
+                  <b>Semestre: </b> ${subjectsemester} </br>
+                  <b>Carga horária teórica: </b> ${teorichours} </br>
+                  <b>Carga horária prática: </b> ${practhours} </br>
+                  ${prerequisites}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="$('#modal${subjectid}').modal('hide')">
+                        Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+    let mydiv = document.createElement('div');
+    mydiv.innerHTML = modalhtml;
+    document.body.appendChild(mydiv);
 }
 
 function getURLParam(param)
