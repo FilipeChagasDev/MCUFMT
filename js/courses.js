@@ -1,4 +1,24 @@
 $(document).ready(function($){
+    buildCoursesTable();
+    
+    document.getElementById('search-input').onchange = function()
+    {   
+        buildCoursesTable();
+    };
+
+    document.getElementById('search-button').onclick = function()
+    {   
+        buildCoursesTable();
+    };
+});
+
+function buildCoursesTable()
+{
+    const searchstring = document.getElementById('search-input').value.toUpperCase();
+
+    console.log(searchstring);
+
+    clearCoursesTable();
 
     requestCampusList(function(campuslist)
     {
@@ -8,23 +28,36 @@ $(document).ready(function($){
             {
                 courselist.forEach(function(courseitem)
                 {
-                    requestStructureList(courseitem.Codigo, function(structlist)
+                    if(searchstring === '' || courseitem.Nome.toUpperCase().includes(searchstring))
                     {
-                        const structitem = structlist[structlist.length-1];
-                        addCourseToTable(courseitem.Codigo, courseitem.Nome, campusitem.Apelido, structitem.PeriodoInicio, structitem.PeriodoFim);
-                    });
+                        let courserow = addRowToTable();
+
+                        requestStructureList(courseitem.Codigo, function(structlist)
+                        {
+                            const structitem = structlist[structlist.length-1];
+                            addCourseToTable(courserow, courseitem.Codigo, courseitem.Nome, campusitem.Apelido, structitem.PeriodoInicio, structitem.PeriodoFim);
+                        });
+                    }
                 });
             });
         });
-    });    
-});
+    });
+}
 
-function addCourseToTable(_id, _name, _campus, _structbegin, _structend)
+function clearCoursesTable()
 {
     let table = document.getElementById("courses-table");
-    
-    let row = table.insertRow();
-    
+    table.innerHTML = "";
+}
+
+function addRowToTable()
+{
+    let table = document.getElementById("courses-table");
+    return table.insertRow();
+}
+
+function addCourseToTable(row, _id, _name, _campus, _structbegin, _structend)
+{
     row.className = "clickable-table-row"
     row.onclick = function(){
         window.document.location = "subjects.html?course="+_id+"&begin="+_structbegin+"&end="+_structend;

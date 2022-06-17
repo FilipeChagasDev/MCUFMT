@@ -52,7 +52,12 @@ function addSubjectToTable(subjectitem)
     let table = document.getElementById("subject-table");
     
     let row = table.insertRow();
-    
+
+    if(parseInt(subjectsemester) % 2 == 0)
+        row.style.backgroundColor = "rgb(240, 240, 240)";
+    else if(parseInt(subjectsemester) == 99)
+        row.style.backgroundColor = "rgb(240, 255, 240)";
+
     row.className = "clickable-table-row"
     row.onclick = function(){
         //TODO
